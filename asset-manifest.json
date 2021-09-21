@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/react-kakao-map-test/static/css/main.6dea0f05.chunk.css",
+    "main.js": "/react-kakao-map-test/static/js/main.47297222.chunk.js",
+    "main.js.map": "/react-kakao-map-test/static/js/main.47297222.chunk.js.map",
+    "runtime-main.js": "/react-kakao-map-test/static/js/runtime-main.d6746d5e.js",
+    "runtime-main.js.map": "/react-kakao-map-test/static/js/runtime-main.d6746d5e.js.map",
+    "static/css/2.46925b27.chunk.css": "/react-kakao-map-test/static/css/2.46925b27.chunk.css",
+    "static/js/2.69e7d786.chunk.js": "/react-kakao-map-test/static/js/2.69e7d786.chunk.js",
+    "static/js/2.69e7d786.chunk.js.map": "/react-kakao-map-test/static/js/2.69e7d786.chunk.js.map",
+    "static/js/3.d858e2e0.chunk.js": "/react-kakao-map-test/static/js/3.d858e2e0.chunk.js",
+    "static/js/3.d858e2e0.chunk.js.map": "/react-kakao-map-test/static/js/3.d858e2e0.chunk.js.map",
+    "index.html": "/react-kakao-map-test/index.html",
+    "static/css/2.46925b27.chunk.css.map": "/react-kakao-map-test/static/css/2.46925b27.chunk.css.map",
+    "static/css/main.6dea0f05.chunk.css.map": "/react-kakao-map-test/static/css/main.6dea0f05.chunk.css.map",
+    "static/js/2.69e7d786.chunk.js.LICENSE.txt": "/react-kakao-map-test/static/js/2.69e7d786.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d6746d5e.js",
+    "static/css/2.46925b27.chunk.css",
+    "static/js/2.69e7d786.chunk.js",
+    "static/css/main.6dea0f05.chunk.css",
+    "static/js/main.47297222.chunk.js"
+  ]
+}
