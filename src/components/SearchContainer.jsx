@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { AutoComplete, Input } from 'antd';
 import _ from 'lodash';
 import axios from 'axios';
+import { MapContext } from '../contexts/map';
 
 const StyledSearchContainer = styled.div`
     display: inline-flex;
     background: white;
     opacity: 0.9;
     width: 300px;
-    height: 200px;
+    height: 100px;
     border-radius: 10px;
 
-    position: fixed;
+    position: absolute;
     top: 10px;
     left: 10px;
     z-index: 99;
@@ -20,9 +21,10 @@ const StyledSearchContainer = styled.div`
 
 const searchResult = (q, resultList) =>
     resultList.map((result, idx) => {
-        // const category = `${q}${idx}`;
         return {
-            value: result.place_name,
+            key: `${result.place_name}_${idx}`, // key 프로퍼티 추가해서 unique 값으로
+            data: result,
+            value: `${result.place_name}`,
             label: (
                 <div
                     style={{
@@ -30,20 +32,25 @@ const searchResult = (q, resultList) =>
                         justifyContent: 'space-between',
                     }}
                 >
-                    <span>{result.place_name}</span>
+                    <span>
+                        {result.place_name} <br />
+                        <span style={{ fontSize: '0.5rem' }}>
+                            {result.road_address_name}
+                        </span>
+                    </span>
                 </div>
             ),
         };
     });
 
 const SearchContainer = () => {
+    const { actions } = useContext(MapContext);
     const [options, setOptions] = useState([]);
 
     const queryCallApi = (q) => {
-        if (!q) return;
         axios
             .get(
-                `https://dapi.kakao.com//v2/local/search/keyword.json?query=${q}&category_group_code=CE7`, // 카페만 검색
+                `https://dapi.kakao.com//v2/local/search/keyword.json?query=${q}`, // 카페만 검색
                 {
                     headers: {
                         Authorization:
@@ -52,7 +59,6 @@ const SearchContainer = () => {
                 }
             )
             .then(({ data: { documents } }) => {
-                console.log(q);
                 console.log(documents);
                 setOptions(
                     documents.length > 0 ? searchResult(q, documents) : []
@@ -61,32 +67,38 @@ const SearchContainer = () => {
             .catch((e) => console.error('키워드 검색 에러!'));
     };
 
-    const debounce = _.debounce((q) => queryCallApi(q), 300);
-
-    const handleSearch = (value) => {
-        if (!value) {
-            setOptions(() => []);
+    const debounce = _.debounce((q) => {
+        if (!q) {
+            onReset();
             return;
         }
-        debounce(value);
+        queryCallApi(q);
+    }, 300);
+
+    const handleSearch = (value) => debounce(value);
+
+    const onReset = () => {
+        setOptions([]);
     };
 
-    const onSelect = (selected) => {
-        console.log(selected);
+    const onSelect = (selected, { data }) => {
+        // todo: 해당 위치로 이동
+        // console.log(data);
+        actions.setCenter({ x: data.x, y: data.y });
     };
 
     return (
         <StyledSearchContainer>
             <AutoComplete
-                dropdownMatchSelectWidth={252}
                 style={{
                     width: 300,
                 }}
                 options={options}
                 onSelect={onSelect}
-                onSearch={handleSearch}
+                onChange={handleSearch}
             >
                 <Input.Search
+                    allowClear
                     style={{ padding: '10px' }}
                     size="large"
                     enterButton
