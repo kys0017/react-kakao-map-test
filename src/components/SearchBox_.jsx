@@ -1,11 +1,12 @@
-import React, { useContext, useState } from 'react';
+/*global kakao*/
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AutoComplete, Input } from 'antd';
 import _ from 'lodash';
 import axios from 'axios';
-import { MapContext } from '../contexts/map';
+import { useSelector } from 'react-redux';
 
-const StyledSearchContainer = styled.div`
+const StyledSearchBox = styled.div`
     display: inline-flex;
     background: white;
     opacity: 0.9;
@@ -19,12 +20,13 @@ const StyledSearchContainer = styled.div`
     z-index: 99;
 `;
 
-const searchResult = (q, resultList) =>
-    resultList.map((result, idx) => {
+const setResultList = (q, resultList) =>
+    resultList.map((result) => {
         return {
-            key: `${result.place_name}_${idx}`, // key 프로퍼티 추가해서 unique 값으로
+            key: `${result.id}`, // key 프로퍼티 추가해서 unique 값으로
             data: result,
             value: `${result.place_name}`,
+            text: `${result.place_name}`,
             label: (
                 <div
                     style={{
@@ -43,9 +45,13 @@ const searchResult = (q, resultList) =>
         };
     });
 
-const SearchContainer = () => {
-    const { actions } = useContext(MapContext);
+const SearchBox_ = () => {
+    const { map: kakaoMap } = useSelector((state) => ({
+        map: state.mapControl.map,
+    }));
     const [options, setOptions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [query, setQuery] = useState('');
 
     const queryCallApi = (q) => {
         axios
@@ -61,8 +67,9 @@ const SearchContainer = () => {
             .then(({ data: { documents } }) => {
                 console.log(documents);
                 setOptions(
-                    documents.length > 0 ? searchResult(q, documents) : []
+                    documents.length > 0 ? setResultList(q, documents) : []
                 );
+                setLoading(false);
             })
             .catch((e) => console.error('키워드 검색 에러!'));
     };
@@ -75,20 +82,27 @@ const SearchContainer = () => {
         queryCallApi(q);
     }, 300);
 
-    const handleSearch = (value) => debounce(value);
+    const handleSearch = (value) => {
+        setLoading(true);
+        debounce(value);
+    };
 
     const onReset = () => {
         setOptions([]);
+        setLoading(false);
     };
 
-    const onSelect = (selected, { data }) => {
-        // todo: 해당 위치로 이동
-        // console.log(data);
-        actions.setCenter({ x: data.x, y: data.y });
+    const onSelect = (selected, { text, data }) => {
+        console.log(selected);
+        // console.log(value_);
+        setQuery(text);
+
+        const moveLatLng = new kakao.maps.LatLng(data.y, data.x);
+        kakaoMap.setCenter(moveLatLng);
     };
 
     return (
-        <StyledSearchContainer>
+        <StyledSearchBox>
             <AutoComplete
                 style={{
                     width: 300,
@@ -102,10 +116,14 @@ const SearchContainer = () => {
                     style={{ padding: '10px' }}
                     size="large"
                     enterButton
+                    loading={loading}
+                    onChange={(event) =>
+                        console.log('event: ', event.target.value)
+                    }
                 />
             </AutoComplete>
-        </StyledSearchContainer>
+        </StyledSearchBox>
     );
 };
 
-export default SearchContainer;
+export default SearchBox_;
