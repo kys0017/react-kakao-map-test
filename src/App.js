@@ -1,14 +1,13 @@
 import React from 'react';
-import KakaoMap from './components/map/KakaoMap';
-import SearchContainer from './components/SearchContainer';
-import { MapProvider } from './contexts/map';
+import KakaoMap from './components/KakaoMap';
+import SearchBox from './components/SearchBox';
 
 function App() {
     return (
-        <MapProvider>
+        <>
             <KakaoMap />
-            <SearchContainer />
-        </MapProvider>
+            <SearchBox className="search-box" />
+        </>
     );
 }
 
