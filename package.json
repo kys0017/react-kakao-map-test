@@ -1,5 +1,5 @@
 {
-  "homepage" : "https://kys0017.github.io/react-kakao-map-test/",
+  "homepage": "https://kys0017.github.io/react-kakao-map-test/",
   "name": "react-kakao-map-test",
   "version": "0.1.0",
   "private": true,
@@ -13,7 +13,10 @@
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "react-redux": "^7.2.5",
     "react-scripts": "4.0.3",
+    "redux": "^4.1.1",
     "styled-components": "^5.3.1",
     "web-vitals": "^1.0.1"
   },
