@@ -1,11 +1,12 @@
 /*global kakao*/
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { AutoComplete, Input } from 'antd';
+import { AutoComplete, Card, Drawer, Input } from 'antd';
 import _ from 'lodash';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import {
+    AiFillCloseSquare,
     AiOutlineClose,
     AiOutlineLoading3Quarters,
     AiOutlineSearch,
@@ -13,12 +14,10 @@ import {
 import SearchList from './SearchList';
 
 const StyledSearchBox = styled.div`
-    display: inline-flex;
-    background: white;
-    opacity: 0.9;
-    width: 300px;
-    //height: 100px;
-    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 350px;
 
     position: absolute;
     top: 10px;
@@ -54,6 +53,7 @@ const AiOutlineLoading3QuartersSpin = () => (
 const setResultList = (q, resultList) =>
     resultList.map((result) => {
         return {
+            key: `${result.id}`,
             data: result,
             value: `${result.id}`, // should be unique
             text: `${result.place_name}`,
@@ -80,6 +80,7 @@ const SearchBox = () => {
         map: state.mapControl.map,
     }));
     const [options, setOptions] = useState([]);
+    const [data, setData] = useState([]);
     const [query, setQuery] = useState('');
     const [suffix, setSuffix] = useState(<AiOutlineSearch />);
     const [visible, setVisible] = useState(false);
@@ -109,9 +110,7 @@ const SearchBox = () => {
             )
             .then(({ data: { documents } }) => {
                 const hasData = documents.length > 0 ? true : false;
-                setOptions(
-                    documents.length > 0 ? setResultList(q, documents) : []
-                );
+                setOptions(hasData ? setResultList(q, documents) : []);
                 setSuffix(
                     hasData ? (
                         <AiOutlineClose onClick={allowClear} />
@@ -143,7 +142,6 @@ const SearchBox = () => {
         setQuery('');
         setOptions([]);
         setSuffix(<AiOutlineSearch />);
-        // setVisible(false);
     };
 
     const onSelect = (selected, { text, data }) => {
@@ -151,6 +149,7 @@ const SearchBox = () => {
         setQuery(text);
         setSuffix(<AiOutlineClose onClick={allowClear} />);
         setVisible(true);
+        setData(options);
 
         // 해당 위치로 이동
         const moveLatLng = new kakao.maps.LatLng(data.y, data.x);
@@ -163,24 +162,52 @@ const SearchBox = () => {
         marker.setMap(kakaoMap);
     };
 
+    const onClose = () => {
+        setVisible(false);
+    };
+
+    const onKeyDown = (e) => {
+        if (e.keycode === 13) queryCallApi(query);
+    };
+
     return (
         <>
             <StyledSearchBox>
-                <AutoComplete
-                    style={{
-                        width: '100%',
-                    }}
-                    options={options}
-                    onSelect={onSelect}
-                    onChange={handleSearch}
-                    value={query}
+                <Card
+                    size="small"
+                    title="REACT-KAKAO-MAP-TEST"
+                    style={{ borderRadius: '10px' }}
                 >
-                    <Input suffix={suffix} size="large" />
-                </AutoComplete>
+                    <AutoComplete
+                        style={{
+                            width: '100%',
+                        }}
+                        options={options}
+                        onSelect={onSelect}
+                        onChange={handleSearch}
+                        onKeyDown={onKeyDown}
+                        value={query}
+                    >
+                        <Input suffix={suffix} size="large" />
+                    </AutoComplete>
+                </Card>
             </StyledSearchBox>
-            {/*{visible && <SearchList data={options} />}*/}
-            <SearchList data={options} display={visible} />
-            {/*<span style={}> CLOSE </span>*/}
+            {visible && (
+                <>
+                    <SearchList data={data} />
+                    <AiFillCloseSquare
+                        style={{
+                            position: 'absolute',
+                            top: '125px',
+                            left: '360px',
+                            zIndex: 9999,
+                            fontSize: '30px',
+                        }}
+                        className="drawer-close-custom"
+                        onClick={onClose}
+                    />
+                </>
+            )}
         </>
     );
 };
