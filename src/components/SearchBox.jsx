@@ -1,9 +1,7 @@
 /*global kakao*/
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { AutoComplete, Card, Drawer, Input } from 'antd';
-import _ from 'lodash';
-import axios from 'axios';
+import { AutoComplete, Card, Input } from 'antd';
 import { useSelector } from 'react-redux';
 import {
     AiFillCloseSquare,
@@ -12,6 +10,8 @@ import {
     AiOutlineSearch,
 } from 'react-icons/ai';
 import SearchList from './SearchList';
+import { getLocalSearchKeyword } from '../api/kakao';
+import { setCenter, setMarker } from '../util/map';
 
 const StyledSearchBox = styled.div`
     display: flex;
@@ -53,6 +53,7 @@ const AiOutlineLoading3QuartersSpin = () => (
 const setResultList = (q, resultList) =>
     resultList.map((result) => {
         return {
+            query: q,
             key: `${result.id}`,
             data: result,
             value: `${result.id}`, // should be unique
@@ -77,7 +78,7 @@ const setResultList = (q, resultList) =>
 
 const SearchBox = () => {
     const { map: kakaoMap } = useSelector((state) => ({
-        map: state.mapControl.map,
+        map: state.mapSetting.map,
     }));
     const [options, setOptions] = useState([]);
     const [data, setData] = useState([]);
@@ -92,22 +93,13 @@ const SearchBox = () => {
         return () => clearTimeout(timeout);
     }, [query]);
 
-    const allowClear = () => onReset();
     const queryCallApi = (q) => {
         if (!q) {
             onReset();
             return;
         }
-        axios
-            .get(
-                `https://dapi.kakao.com//v2/local/search/keyword.json?query=${q}`,
-                {
-                    headers: {
-                        Authorization:
-                            'KakaoAK 6797801199c3b3d73ff33c7ca3edea88',
-                    },
-                }
-            )
+
+        getLocalSearchKeyword(q)
             .then(({ data: { documents } }) => {
                 const hasData = documents.length > 0 ? true : false;
                 setOptions(hasData ? setResultList(q, documents) : []);
@@ -122,20 +114,41 @@ const SearchBox = () => {
             .catch((e) => console.error('키워드 검색 에러!'));
     };
 
-    const debounce = _.debounce((q) => {
-        if (!q) {
-            onReset();
-            return;
-        }
-        queryCallApi(q);
-    }, 500);
-
     const handleSearch = (value) => {
         setQuery(value);
         setSuffix(<AiOutlineLoading3QuartersSpin />);
-        // debounce(value);
-        // setState 가 실행되면 SearchBox 컴포넌트가 리렌더링 되므로
-        // debounce(value) 효과를 주려면 useEffect 를 사용해야 됨
+    };
+
+    const onSelect = (selected, { text, data }) => {
+        // console.log('query: ', query, ' , text:', text);
+        setQuery(text);
+        setSuffix(<AiOutlineClose onClick={allowClear} />);
+        setVisible(true);
+        if (query === text) setData(options);
+        else
+            getLocalSearchKeyword(text).then(({ data: { documents } }) =>
+                setData(setResultList(text, documents))
+            );
+
+        // 해당 위치로 이동
+        setCenter(kakaoMap, data.y, data.x);
+        // 마커 표시
+        setMarker(kakaoMap, data.y, data.x);
+    };
+
+    const onKeyDown = (e) => {
+        if (e.keyCode === 13) {
+            setVisible(true);
+            // console.log('query: ', query, ' , value:', e.target.value);
+            // console.log(options[0]?.query);
+            // if (_.isEqual(options, data) && !_.isEmpty(options)) {
+            if (!options[0]?.query && options[0]?.query === query) {
+                setData(options);
+            } else
+                getLocalSearchKeyword(query).then(({ data: { documents } }) =>
+                    setData(setResultList(query, documents))
+                );
+        }
     };
 
     const onReset = () => {
@@ -144,31 +157,11 @@ const SearchBox = () => {
         setSuffix(<AiOutlineSearch />);
     };
 
-    const onSelect = (selected, { text, data }) => {
-        // console.log('selected: ', selected, ', text:', text);
-        setQuery(text);
-        setSuffix(<AiOutlineClose onClick={allowClear} />);
-        setVisible(true);
-        setData(options);
-
-        // 해당 위치로 이동
-        const moveLatLng = new kakao.maps.LatLng(data.y, data.x);
-        kakaoMap.setCenter(moveLatLng);
-        // 마커 생성
-        const marker = new kakao.maps.Marker({
-            position: moveLatLng,
-        });
-        // 마커 표시
-        marker.setMap(kakaoMap);
-    };
-
     const onClose = () => {
         setVisible(false);
     };
 
-    const onKeyDown = (e) => {
-        if (e.keycode === 13) queryCallApi(query);
-    };
+    const allowClear = () => onReset();
 
     return (
         <>
@@ -185,10 +178,13 @@ const SearchBox = () => {
                         options={options}
                         onSelect={onSelect}
                         onChange={handleSearch}
-                        onKeyDown={onKeyDown}
                         value={query}
                     >
-                        <Input suffix={suffix} size="large" />
+                        <Input
+                            suffix={suffix}
+                            size="large"
+                            onKeyDown={onKeyDown}
+                        />
                     </AutoComplete>
                 </Card>
             </StyledSearchBox>
