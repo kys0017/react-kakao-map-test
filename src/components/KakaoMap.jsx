@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { setMap } from '../modules/mapControl';
+import { setMap } from '../modules/mapSetting';
 
 const StyledMapDiv = styled.div`
     position: fixed;

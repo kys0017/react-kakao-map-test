@@ -61,7 +61,7 @@ const StyledMapTypeControlDiv = styled.div`
 
 const KakaoMapTypeControl = () => {
     const { map: kakaoMap } = useSelector((state) => ({
-        map: state.mapControl.map,
+        map: state.mapSetting.map,
     }));
 
     const [roadmapCls, setRoadmapCls] = useState('selected_btn');

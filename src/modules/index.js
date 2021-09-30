@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import mapControl from './mapControl';
+import mapSetting from './mapSetting';
 
 const rootReducer = combineReducers({
-    mapControl,
+    mapSetting,
 });
 
 export default rootReducer;
