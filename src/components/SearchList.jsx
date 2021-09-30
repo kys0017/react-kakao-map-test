@@ -3,10 +3,11 @@ import React from 'react';
 import { Card, List } from 'antd';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+import { setCenter, setMarker } from '../util/map';
 
 const SearchListDiv = styled.div`
     display: flex;
-    padding: 10px;
+    padding: 5px;
     flex: 1;
     flex-direction: column;
     width: 350px;
@@ -23,19 +24,12 @@ const SearchListDiv = styled.div`
 
 const SearchList = ({ data }) => {
     const { map: kakaoMap } = useSelector((state) => ({
-        map: state.mapControl.map,
+        map: state.mapSetting.map,
     }));
 
     const onClick = (y, x) => {
-        // 해당 위치로 이동
-        const moveLatLng = new kakao.maps.LatLng(y, x);
-        kakaoMap.setCenter(moveLatLng);
-        // 마커 생성
-        const marker = new kakao.maps.Marker({
-            position: moveLatLng,
-        });
-        // 마커 표시
-        marker.setMap(kakaoMap);
+        setCenter(kakaoMap, y, x);
+        setMarker(kakaoMap, y, x);
     };
 
     return (

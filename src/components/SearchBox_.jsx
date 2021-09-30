@@ -81,7 +81,7 @@ const AiOutlineLoading3QuartersSpin = () => (
 
 const SearchBox_ = () => {
     const { map: kakaoMap } = useSelector((state) => ({
-        map: state.mapControl.map,
+        map: state.mapSetting.map,
     }));
     const [openOptionContainer, setOpenOptionContainer] = useState(false);
     const [options, setOptions] = useState([]);
