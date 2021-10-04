@@ -1,19 +1,18 @@
 /*global kakao*/
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { AutoComplete, Card, Input } from 'antd';
+import { AutoComplete, Card, Input, Radio } from 'antd';
 import { useSelector } from 'react-redux';
 import {
-    AiFillCloseSquare,
     AiOutlineClose,
     AiOutlineLoading3Quarters,
     AiOutlineSearch,
 } from 'react-icons/ai';
 import SearchList from './SearchList';
-import { getLocalSearchKeyword } from '../api/kakao';
-import { setCenter, setMarker } from '../util/map';
+import { getLocalSearchKeyword } from '../../api/kakao';
+import { setCenter, setMarker } from '../../util/map';
 
-const StyledSearchBox = styled.div`
+const StyledSearchBox = React.memo(styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -34,7 +33,7 @@ const StyledSearchBox = styled.div`
             transform: rotate(360deg);
         }
     }
-`;
+`);
 
 const AiOutlineLoading3QuartersSpin = () => (
     <AiOutlineLoading3Quarters
@@ -55,16 +54,12 @@ const setResultList = (q, resultList) =>
         return {
             query: q,
             key: `${result.id}`,
-            data: result,
             value: `${result.id}`, // should be unique
             text: `${result.place_name}`,
+            data: result,
+            isbookmark: 'false',
             label: (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}
-                >
+                <div>
                     <span>
                         {result.place_name} <br />
                         <span style={{ fontSize: '0.5rem' }}>
@@ -85,6 +80,8 @@ const SearchBox = () => {
     const [query, setQuery] = useState('');
     const [suffix, setSuffix] = useState(<AiOutlineSearch />);
     const [visible, setVisible] = useState(false);
+    const [type, setType] = useState('result');
+    const [bookmarks, setBookmarks] = useState([]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -105,13 +102,15 @@ const SearchBox = () => {
                 setOptions(hasData ? setResultList(q, documents) : []);
                 setSuffix(
                     hasData ? (
-                        <AiOutlineClose onClick={allowClear} />
+                        <AiOutlineClose onClick={onReset} />
                     ) : (
                         <AiOutlineSearch />
                     )
                 );
             })
-            .catch((e) => console.error('키워드 검색 에러!'));
+            .catch((e) => {
+                throw new Error('키워드 검색 에러!');
+            });
     };
 
     const handleSearch = (value) => {
@@ -122,7 +121,7 @@ const SearchBox = () => {
     const onSelect = (selected, { text, data }) => {
         // console.log('query: ', query, ' , text:', text);
         setQuery(text);
-        setSuffix(<AiOutlineClose onClick={allowClear} />);
+        setSuffix(<AiOutlineClose onClick={onReset} />);
         setVisible(true);
         if (query === text) setData(options);
         else
@@ -130,9 +129,7 @@ const SearchBox = () => {
                 setData(setResultList(text, documents))
             );
 
-        // 해당 위치로 이동
         setCenter(kakaoMap, data.y, data.x);
-        // 마커 표시
         setMarker(kakaoMap, data.y, data.x);
     };
 
@@ -140,8 +137,6 @@ const SearchBox = () => {
         if (e.keyCode === 13) {
             setVisible(true);
             // console.log('query: ', query, ' , value:', e.target.value);
-            // console.log(options[0]?.query);
-            // if (_.isEqual(options, data) && !_.isEmpty(options)) {
             if (!options[0]?.query && options[0]?.query === query) {
                 setData(options);
             } else
@@ -161,7 +156,30 @@ const SearchBox = () => {
         setVisible(false);
     };
 
-    const allowClear = () => onReset();
+    const onClickRadioButton = (e) => {
+        setType(e.target.value);
+        setVisible(true);
+    };
+
+    const onClickBookmark = (e, item) => {
+        const bookmarkIndex = bookmarks.findIndex(
+            (bookmark) => bookmark.value === item.value
+        );
+
+        if (bookmarkIndex === -1) {
+            item.isbookmark = 'true';
+            setBookmarks([...bookmarks, item]);
+        } else {
+            item.isbookmark = 'false';
+            bookmarks.splice(bookmarkIndex, 1);
+            setBookmarks([...bookmarks]);
+        }
+    };
+
+    useMemo(() => {
+        console.log(bookmarks);
+        console.log(data);
+    }, [bookmarks]);
 
     return (
         <>
@@ -170,6 +188,17 @@ const SearchBox = () => {
                     size="small"
                     title="REACT-KAKAO-MAP-TEST"
                     style={{ borderRadius: '10px' }}
+                    actions={[
+                        <Radio.Group
+                            defaultValue="result"
+                            buttonStyle="solid"
+                            onChange={onClickRadioButton}
+                            style={{ display: 'inline-flex' }}
+                        >
+                            <Radio.Button value="result">검색결과</Radio.Button>
+                            <Radio.Button value="bookmark">북마크</Radio.Button>
+                        </Radio.Group>,
+                    ]}
                 >
                     <AutoComplete
                         style={{
@@ -190,17 +219,11 @@ const SearchBox = () => {
             </StyledSearchBox>
             {visible && (
                 <>
-                    <SearchList data={data} />
-                    <AiFillCloseSquare
-                        style={{
-                            position: 'absolute',
-                            top: '125px',
-                            left: '360px',
-                            zIndex: 9999,
-                            fontSize: '30px',
-                        }}
-                        className="drawer-close-custom"
-                        onClick={onClose}
+                    <SearchList
+                        type={type}
+                        data={type === 'result' ? data : bookmarks}
+                        onClickClose={onClose}
+                        onClickBookmark={onClickBookmark}
                     />
                 </>
             )}
@@ -208,4 +231,4 @@ const SearchBox = () => {
     );
 };
 
-export default SearchBox;
+export default React.memo(SearchBox);
