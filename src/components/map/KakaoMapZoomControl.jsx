@@ -3,13 +3,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/all';
+import { setLevel } from '../../util/map';
 
 const StyledMapZoomControlDiv = styled.div`
     position: absolute;
     bottom: 2rem;
     right: 1rem;
     width: 36px;
-    height: 80px;
+    height: 72px;
     overflow: hidden;
     background-color: #f5f5f5;
     z-index: 10;
@@ -22,7 +23,7 @@ const StyledMapZoomControlDiv = styled.div`
         justify-content: center;
         align-items: center;
         width: 36px;
-        height: 40px;
+        height: 36px;
         cursor: pointer;
 
         svg {
@@ -41,15 +42,8 @@ const KakaoMapZoomControl = () => {
         map: state.mapSetting.map,
     }));
 
-    // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-    const zoomIn = () => {
-        kakaoMap.setLevel(kakaoMap.getLevel() - 1);
-    };
-
-    // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-    const zoomOut = () => {
-        kakaoMap.setLevel(kakaoMap.getLevel() + 1);
-    };
+    const zoomIn = () => setLevel(kakaoMap, -1);
+    const zoomOut = () => setLevel(kakaoMap, 1);
 
     return (
         <>

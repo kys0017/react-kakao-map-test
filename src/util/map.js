@@ -1,7 +1,7 @@
 /*global kakao*/
 
 // 현재 위치 가져오기
-export const getCurrentPosition = () => {
+export const getCurrentPosition = (option = { enableHighAccuracy: true }) => {
     if ('geolocation' in navigator) {
         /* 위치정보 사용 가능 */
         return new Promise((res, rej) => {
@@ -40,4 +40,8 @@ export const removeMarkers = () => {
         position: null,
     });
     marker.setMap(null);
+};
+
+export const setLevel = (map, level) => {
+    map.setLevel(map.getLevel() + level);
 };
