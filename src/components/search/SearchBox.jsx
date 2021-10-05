@@ -87,6 +87,7 @@ const SearchBox = () => {
     };
 
     const onChange = (value) => {
+        // console.log(value)
         setQuery(value);
     };
 
