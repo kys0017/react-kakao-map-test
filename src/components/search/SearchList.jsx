@@ -1,5 +1,5 @@
 /*global kakao*/
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, List } from 'antd';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -18,20 +18,37 @@ const SearchListDiv = React.memo(styled.div`
     background: rgba(10, 123, 192, 0.3);
 
     position: absolute;
-    top: 180px;
+    top: 160px;
     left: 10px;
     bottom: 10px;
     z-index: 5;
 `);
 
-const SearchList = ({ type, data, onClickClose, onClickBookmark }) => {
+const SearchList = ({ type, data, onClickClose }) => {
     const { map: kakaoMap } = useSelector((state) => ({
         map: state.mapSetting.map,
     }));
 
+    const [bookmarks, setBookmarks] = useState([]);
+
     const onClick = (y, x) => {
         setCenter(kakaoMap, y, x);
         setMarker(kakaoMap, y, x);
+    };
+
+    const onClickBookmark = (e, item) => {
+        const bookmarkIndex = bookmarks.findIndex(
+            (bookmark) => bookmark.value === item.value
+        );
+
+        if (bookmarkIndex === -1) {
+            item.isbookmark = 'true';
+            setBookmarks([...bookmarks, item]);
+        } else {
+            item.isbookmark = 'false';
+            bookmarks.splice(bookmarkIndex, 1);
+            setBookmarks([...bookmarks]);
+        }
     };
 
     return (
@@ -43,7 +60,7 @@ const SearchList = ({ type, data, onClickClose, onClickBookmark }) => {
                 bodyStyle={{ display: 'none' }}
                 extra={
                     <AiFillCloseSquare
-                        style={{ fontSize: '20px' }}
+                        style={{ fontSize: '1.5rem' }}
                         onClick={onClickClose}
                     />
                 }
@@ -51,17 +68,17 @@ const SearchList = ({ type, data, onClickClose, onClickBookmark }) => {
             <Card size="small" style={{ overflow: 'auto' }}>
                 <List
                     itemLayout="horizontal"
-                    dataSource={data}
+                    dataSource={type === 'result' ? data : bookmarks}
                     locale={{ emptyText: <div>dddd</div> }}
                     renderItem={(item) => (
                         <List.Item>
                             <List.Item.Meta
-                                style={{ cursor: 'pointer' }}
+                                title={item.data.place_name}
+                                description={item.data.road_address_name}
                                 onClick={() =>
                                     onClick(item.data.y, item.data.x)
                                 }
-                                title={item.data.place_name}
-                                description={item.data.road_address_name}
+                                style={{ cursor: 'pointer' }}
                             />
                             {item.isbookmark === 'true' ? (
                                 <BsBookmarkFill
