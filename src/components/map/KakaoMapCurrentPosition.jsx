@@ -1,20 +1,14 @@
-/*global kakao*/
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import {
-    AiOutlineMinus,
-    AiOutlinePlus,
-    BiCurrentLocation,
-} from 'react-icons/all';
+import { BiCurrentLocation } from 'react-icons/all';
 import {
     getCurrentPosition,
     setCenter,
-    setLevel,
     setMarker,
-} from '../../util/map';
+} from '../../util/map/mapControl';
 
-const StyledMapZoomControlDiv = styled.div`
+const StyledMapCurrentPositionlDiv = styled.div`
     position: absolute;
     bottom: 7rem;
     right: 1rem;
@@ -46,7 +40,7 @@ const StyledMapZoomControlDiv = styled.div`
     }
 `;
 
-const KakaoMapZoomControl = () => {
+const KakaoMapCurrentPosition = () => {
     const { map: kakaoMap } = useSelector((state) => ({
         map: state.mapSetting.map,
     }));
@@ -65,13 +59,13 @@ const KakaoMapZoomControl = () => {
 
     return (
         <>
-            <StyledMapZoomControlDiv>
+            <StyledMapCurrentPositionlDiv>
                 <span onClick={setCurrentPosition}>
                     <BiCurrentLocation />
                 </span>
-            </StyledMapZoomControlDiv>
+            </StyledMapCurrentPositionlDiv>
         </>
     );
 };
 
-export default KakaoMapZoomControl;
+export default KakaoMapCurrentPosition;
