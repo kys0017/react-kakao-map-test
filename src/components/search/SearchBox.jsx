@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import SearchList from './SearchList';
 import { getLocalSearchKeyword } from '../../api/kakao';
-import { setCenter, setMarker } from '../../util/map';
+import { setCenter, setMarker } from '../../util/map/mapControl';
 import SearchBoxRadioButton from './SearchBoxRadioButton';
 import SearchBoxInput from './SearchBoxInput';
 

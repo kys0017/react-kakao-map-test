@@ -1,9 +1,8 @@
-/*global kakao*/
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/all';
-import { setLevel } from '../../util/map';
+import { setLevel } from '../../util/map/mapControl';
 
 const StyledMapZoomControlDiv = styled.div`
     position: absolute;

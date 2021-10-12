@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, List } from 'antd';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { setCenter, setMarker } from '../../util/map';
+import { setCenter, setMarker } from '../../util/map/mapControl';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/all';
 import { AiFillCloseSquare } from 'react-icons/ai';
 
