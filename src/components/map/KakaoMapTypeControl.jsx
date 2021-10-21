@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { GrMapLocation, GrSatellite } from 'react-icons/all';
@@ -49,13 +49,11 @@ const StyledMapTypeControlDiv = styled.div`
     }
 
     .selected_btn {
-        //color: #fff;
         background: #40a9ff;
-        //background: linear-gradient(#08979c, #13c2c2);
 
-        &:hover {
-            color: #fff;
-        }
+        //&:hover {
+        //    color: #fff;
+        //}
     }
 `;
 
@@ -67,12 +65,8 @@ const KakaoMapTypeControl = () => {
     const [roadmapCls, setRoadmapCls] = useState('selected_btn');
     const [skyviewCls, setSkyviewCls] = useState('btn');
 
-    const roadmapControl = useRef();
-    const skyviewControl = useRef();
-
     // 지도타입 컨트롤의 지도 또는 스카이뷰 버튼을 클릭하면 호출되어 지도타입을 바꾸는 함수입니다
     const changeMapType = (maptype) => {
-        // console.log(roadmapControl);
         setMapType(kakaoMap, maptype);
         if (maptype === 'roadmap') {
             setRoadmapCls('selected_btn');
@@ -89,14 +83,12 @@ const KakaoMapTypeControl = () => {
                 <span
                     className={roadmapCls}
                     onClick={() => changeMapType('roadmap')}
-                    ref={roadmapControl}
                 >
                     <GrMapLocation />
                 </span>
                 <span
                     className={skyviewCls}
                     onClick={() => changeMapType('skyview')}
-                    ref={skyviewControl}
                 >
                     <GrSatellite />
                 </span>
