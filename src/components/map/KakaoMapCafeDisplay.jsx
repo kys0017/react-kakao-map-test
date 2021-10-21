@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { IoCafe, IoCafeOutline } from 'react-icons/all';
+import { FiCoffee } from 'react-icons/all';
 import {
     addEvent,
     categorySearch,
@@ -39,16 +39,41 @@ const StyledMapCafeDisplayDiv = styled.div`
             border-bottom: 1px solid #bfbfbf;
         }
     }
+
+    .btn {
+        background: #fff;
+        background: linear-gradient(#fff, #e6e6e6);
+
+        &:hover {
+            background: #f5f5f5;
+            background: linear-gradient(#f5f5f5, #e3e3e3);
+        }
+
+        &:active {
+            background: #e6e6e6;
+            background: linear-gradient(#e6e6e6, #fff);
+        }
+    }
+
+    .selected_btn {
+        background: #b197fc;
+
+        //&:hover {
+        //    color: #fff;
+        //}
+    }
 `;
 
 const KakaoMapCafeDisplay = () => {
     const { map: kakaoMap } = useSelector((state) => ({
         map: state.mapSetting.map,
     }));
+
     const [isClicked, setIsClicked] = useState(false);
+    const [cafeCls, setCafeCls] = useState('btn');
 
     // 버튼 클릭 시 토글
-    const onClickToggle = () => {
+    const onClick = () => {
         setIsClicked(!isClicked);
     };
 
@@ -61,14 +86,15 @@ const KakaoMapCafeDisplay = () => {
     useEffect(() => {
         if (!kakaoMap) return;
         if (isClicked) {
+            setCafeCls('selected_btn');
+            handler();
             addEvent(kakaoMap, 'dragend', handler);
         } else {
-            // setMarkers(null);
+            setCafeCls('btn');
         }
-        console.log(kakaoMap);
 
         return () => {
-            console.log('카페 버튼 컴포넌트 언마운트!');
+            // console.log('카페 버튼 컴포넌트 언마운트!');
             setMarkers(null);
             removeEvent(kakaoMap, 'dragend', handler);
         };
@@ -77,8 +103,8 @@ const KakaoMapCafeDisplay = () => {
     return (
         <>
             <StyledMapCafeDisplayDiv>
-                <span onClick={onClickToggle}>
-                    {isClicked ? <IoCafe /> : <IoCafeOutline />}
+                <span className={cafeCls} onClick={onClick}>
+                    <FiCoffee />
                 </span>
             </StyledMapCafeDisplayDiv>
         </>
