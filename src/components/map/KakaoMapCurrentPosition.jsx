@@ -2,11 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { BiCurrentLocation } from 'react-icons/all';
-import {
-    getCurrentPosition,
-    setCenter,
-    setMarker,
-} from '../../util/map/mapControl';
+import { getCurrentPosition, setCenter } from '../../util/map/mapControl';
 
 const StyledMapCurrentPositionlDiv = styled.div`
     position: absolute;
@@ -51,7 +47,10 @@ const KakaoMapCurrentPosition = () => {
                 enableHighAccuracy: true,
             });
             setCenter(kakaoMap, coords.latitude, coords.longitude);
-            setMarker(kakaoMap, coords.latitude, coords.longitude);
+            // displayMarker(
+            //     { y: coords.latitude, x: coords.longitude },
+            //     kakaoMap
+            // );
         } catch (e) {
             throw new Error('set position error!');
         }
