@@ -19,7 +19,7 @@ export const categorySearch = (map, code) => {
         if (status === kakao.maps.services.Status.OK) {
             console.log(result);
             for (let i = 0; i < result.length; i++) {
-                displayMarker(result[i], map);
+                displayMarkerWithInfo(result[i], map);
             }
         }
     };
@@ -35,7 +35,16 @@ let markers = [];
 // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
 let infowindows = [];
 // 지도에 마커를 표시하는 함수입니다
-const displayMarker = (place, map) => {
+export const displayMarker = (place, map) => {
+    // 마커를 생성하고 지도에 표시합니다
+    const marker = new kakao.maps.Marker({
+        map: map,
+        position: new kakao.maps.LatLng(place.y, place.x),
+    });
+    markers.push(marker);
+};
+
+const displayMarkerWithInfo = (place, map) => {
     // 마커를 생성하고 지도에 표시합니다
     const marker = new kakao.maps.Marker({
         map: map,
