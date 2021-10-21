@@ -105,7 +105,8 @@ const SearchBox = () => {
     const onKeyDown = (e) => {
         if (e.keyCode === 13) {
             setVisible(true);
-            // console.log('query: ', query, ' , value:', e.target.value);
+            setType('result');
+
             if (!options[0]?.query && options[0]?.query === query) {
                 setData(options);
             } else
@@ -138,7 +139,10 @@ const SearchBox = () => {
                     onSelect={onSelect}
                     onReset={onReset}
                 />
-                <SearchBoxRadioButton onClickRadioButton={onClickRadioButton} />
+                <SearchBoxRadioButton
+                    type={type}
+                    onClickRadioButton={onClickRadioButton}
+                />
             </StyledSearchBox>
             {visible && (
                 <>
