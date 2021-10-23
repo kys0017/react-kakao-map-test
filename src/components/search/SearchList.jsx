@@ -9,20 +9,16 @@ import { AiFillCloseSquare } from 'react-icons/ai';
 
 const SearchListDiv = React.memo(styled.div`
     display: flex;
-    padding: 5px;
     flex: 1;
     flex-direction: column;
-    width: 350px;
     height: auto;
-    border-radius: 10px;
-    background: rgba(10, 123, 192, 0.3);
-
-    position: absolute;
-    top: 160px;
-    left: 10px;
-    bottom: 10px;
-    z-index: 5;
+    overflow: hidden;
 `);
+
+const iconStyle = {
+    width: '1.2rem',
+    height: '1.2rem',
+};
 
 const SearchList = ({ type, data, onClickClose }) => {
     const { map: kakaoMap } = useSelector((state) => ({
@@ -65,11 +61,14 @@ const SearchList = ({ type, data, onClickClose }) => {
                     />
                 }
             />
-            <Card size="small" style={{ overflow: 'auto' }}>
+            <Card
+                size="small"
+                style={{ flex: 1, height: '100%', overflow: 'auto' }}
+            >
                 <List
                     itemLayout="horizontal"
                     dataSource={type === 'result' ? data : bookmarks}
-                    locale={{ emptyText: <div>dddd</div> }}
+                    locale={{ emptyText: <div>No data</div> }}
                     renderItem={(item) => (
                         <List.Item>
                             <List.Item.Meta
@@ -83,18 +82,12 @@ const SearchList = ({ type, data, onClickClose }) => {
                             {item.isbookmark === 'true' ? (
                                 <BsBookmarkFill
                                     onClick={(e) => onClickBookmark(e, item)}
-                                    style={{
-                                        width: '1.2rem',
-                                        height: '1.2rem',
-                                    }}
+                                    style={iconStyle}
                                 />
                             ) : (
                                 <BsBookmark
                                     onClick={(e) => onClickBookmark(e, item)}
-                                    style={{
-                                        width: '1.2rem',
-                                        height: '1.2rem',
-                                    }}
+                                    style={iconStyle}
                                 />
                             )}
                         </List.Item>
