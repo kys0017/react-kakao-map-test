@@ -1,12 +1,14 @@
 # React-kakao-map-test
 
-### React practice using kakao api 
-<br />
+React practice using kakao api 
+
+frontend : react
 
 ### Getting Started
 ***
 __Prerequisites__
 * node
+* yarn
 
 __Installing dependency packages__
 > yarn install
