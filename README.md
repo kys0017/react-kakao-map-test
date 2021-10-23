@@ -1,6 +1,6 @@
-# React-kakao-map-test
+# React-kakao-map-test [![GitHub Pages](https://img.shields.io/badge/GitHubPages-000000?logo=GitHubPages&logoColor=white)](https://kys0017.github.io/react-kakao-map-test/)
 
-React practice using kakao api 
+React practice using kakao api
 
 * frontend : react
 
