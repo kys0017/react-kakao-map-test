@@ -2,7 +2,7 @@
 
 React practice using kakao api 
 
-frontend : react
+* frontend : react
 
 ### Getting Started
 ***
