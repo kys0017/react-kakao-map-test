@@ -19,6 +19,10 @@ const StyledMapTypeControlDiv = styled.div`
     border: 1px solid #919191;
     border-radius: 5px;
 
+    @media screen and (max-width: 768px) {
+        top: 10rem;
+    }
+
     span {
         display: flex;
         justify-content: center;

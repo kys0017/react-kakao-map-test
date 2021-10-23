@@ -7,18 +7,9 @@ import { getLocalSearchKeyword } from '../../api/kakao';
 import { setCenter, setMarker } from '../../util/map/mapControl';
 import SearchBoxRadioButton from './SearchBoxRadioButton';
 import SearchBoxInput from './SearchBoxInput';
+import { Col, Row } from 'antd';
 
 const StyledSearchBox = React.memo(styled.div`
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: 350px;
-
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 10;
-
     svg {
         width: 1.5rem;
         height: 1.5rem;
@@ -130,29 +121,47 @@ const SearchBox = () => {
 
     return (
         <>
-            <StyledSearchBox>
-                <SearchBoxInput
-                    query={query}
-                    options={options}
-                    onChange={onChange}
-                    onKeyDown={onKeyDown}
-                    onSelect={onSelect}
-                    onReset={onReset}
-                />
-                <SearchBoxRadioButton
-                    type={type}
-                    onClickRadioButton={onClickRadioButton}
-                />
-            </StyledSearchBox>
-            {visible && (
-                <>
-                    <SearchList
-                        type={type}
-                        data={data}
-                        onClickClose={onClose}
-                    />
-                </>
-            )}
+            <Row
+                style={{
+                    flex: '0 1 0%',
+                    height: '100%',
+                }}
+            >
+                <Col
+                    xs={24}
+                    md={12}
+                    lg={8}
+                    xl={6}
+                    style={{
+                        flex: 1,
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
+                >
+                    <StyledSearchBox>
+                        <SearchBoxInput
+                            query={query}
+                            options={options}
+                            onChange={onChange}
+                            onKeyDown={onKeyDown}
+                            onSelect={onSelect}
+                            onReset={onReset}
+                        />
+                        <SearchBoxRadioButton
+                            type={type}
+                            onClickRadioButton={onClickRadioButton}
+                        />
+                    </StyledSearchBox>
+                    {visible && (
+                        <SearchList
+                            type={type}
+                            data={data}
+                            onClickClose={onClose}
+                        />
+                    )}
+                </Col>
+            </Row>
         </>
     );
 };

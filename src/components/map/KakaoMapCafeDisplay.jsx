@@ -22,6 +22,10 @@ const StyledMapCafeDisplayDiv = styled.div`
     border: 1px solid #919191;
     border-radius: 5px;
 
+    @media screen and (max-width: 768px) {
+        top: 16rem;
+    }
+
     span {
         display: flex;
         justify-content: center;
@@ -89,6 +93,8 @@ const KakaoMapCafeDisplay = () => {
             setCafeCls('selected_btn');
             handler();
             addEvent(kakaoMap, 'dragend', handler);
+            addEvent(kakaoMap, 'zoom_changed', handler);
+            addEvent(kakaoMap, 'center_changed', handler);
         } else {
             setCafeCls('btn');
         }
@@ -97,6 +103,8 @@ const KakaoMapCafeDisplay = () => {
             // console.log('카페 버튼 컴포넌트 언마운트!');
             setMarkers(null);
             removeEvent(kakaoMap, 'dragend', handler);
+            removeEvent(kakaoMap, 'zoom_changed', handler);
+            removeEvent(kakaoMap, 'center_changed', handler);
         };
     }, [isClicked]);
 
