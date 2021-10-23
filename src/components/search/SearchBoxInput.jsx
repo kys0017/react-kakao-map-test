@@ -58,11 +58,13 @@ function SearchBoxInput({
         <Card
             size="small"
             title="REACT-KAKAO-MAP-TEST"
-            style={{ borderRadius: '10px 10px 0 0' }}
             headStyle={{
-                backgroundColor: 'gray',
+                backgroundColor: '#40a9ff',
                 color: '#fff',
-                borderRadius: '10px 10px 0 0',
+            }}
+            bodyStyle={{
+                backgroundColor: '#40a9ff',
+                color: '#fff',
             }}
         >
             <AutoComplete

@@ -7,7 +7,6 @@ function SearchBoxRadioButton({ onClickRadioButton, type }) {
     const [typeValue, setTypeValue] = useState('');
 
     useEffect(() => {
-        console.log('type :', type);
         setChecked(type === 'result');
         setTypeValue(type);
     }, [type]);
@@ -15,10 +14,9 @@ function SearchBoxRadioButton({ onClickRadioButton, type }) {
     return (
         <Radio.Group
             size="large"
-            // defaultValue=""
             value={typeValue}
             onChange={onClickRadioButton}
-            style={{ display: 'inline-flex' }}
+            style={{ display: 'flex' }}
             id="radioGroup"
         >
             <Radio.Button
@@ -26,7 +24,6 @@ function SearchBoxRadioButton({ onClickRadioButton, type }) {
                 style={{
                     width: '100%',
                     textAlign: 'center',
-                    borderBottomLeftRadius: '10px',
                 }}
                 id="radioButtonResult"
                 checked={checked}
@@ -45,7 +42,6 @@ function SearchBoxRadioButton({ onClickRadioButton, type }) {
                 style={{
                     width: '100%',
                     textAlign: 'center',
-                    borderBottomRightRadius: '10px',
                 }}
                 id="radioButtonBookmark"
                 checked={!checked}
