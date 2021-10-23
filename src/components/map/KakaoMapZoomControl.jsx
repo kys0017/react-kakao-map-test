@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/all';
-import { setLevel } from '../../util/map/mapControl';
+import { getLevel, setLevel } from '../../util/map/mapControl';
 
 const StyledMapZoomControlDiv = styled.div`
     position: absolute;
@@ -41,8 +41,8 @@ const KakaoMapZoomControl = () => {
         map: state.mapSetting.map,
     }));
 
-    const zoomIn = () => setLevel(kakaoMap, -1);
-    const zoomOut = () => setLevel(kakaoMap, 1);
+    const zoomIn = () => setLevel(kakaoMap, getLevel(kakaoMap) - 1);
+    const zoomOut = () => setLevel(kakaoMap, getLevel(kakaoMap) + 1);
 
     return (
         <>

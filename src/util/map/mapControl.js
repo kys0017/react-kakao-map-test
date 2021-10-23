@@ -54,5 +54,9 @@ export const removeMarkers = () => {
 };
 
 export const setLevel = (map, level) => {
-    map.setLevel(map.getLevel() + level);
+    map.setLevel(level);
+};
+
+export const getLevel = (map, level) => {
+    return map.getLevel();
 };

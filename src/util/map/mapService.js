@@ -17,7 +17,7 @@ export const categorySearch = (map, code) => {
 
     const callback = (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
-            console.log(result);
+            // console.log(result);
             for (let i = 0; i < result.length; i++) {
                 displayMarkerWithInfo(result[i], map);
             }
