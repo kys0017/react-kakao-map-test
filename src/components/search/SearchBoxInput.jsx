@@ -58,6 +58,7 @@ function SearchBoxInput({
         <Card
             size="small"
             title="REACT-KAKAO-MAP-TEST"
+            bordered={false}
             headStyle={{
                 backgroundColor: '#40a9ff',
                 color: '#fff',
