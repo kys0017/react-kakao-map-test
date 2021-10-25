@@ -1,11 +1,12 @@
 /*global kakao*/
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, List } from 'antd';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { setCenter, setMarker } from '../../util/map/mapControl';
+import { setCenter } from '../../util/map/mapControl';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/all';
 import { AiFillCloseSquare } from 'react-icons/ai';
+import { displaySearchMarker } from '../../util/map/mapService';
 
 const SearchListDiv = React.memo(styled.div`
     display: flex;
@@ -20,31 +21,20 @@ const iconStyle = {
     height: '1.2rem',
 };
 
-const SearchList = ({ type, data, onClickClose }) => {
+const SearchList = ({
+    type,
+    data,
+    bookmarks,
+    onClickBookmark,
+    onClickClose,
+}) => {
     const { map: kakaoMap } = useSelector((state) => ({
         map: state.mapSetting.map,
     }));
 
-    const [bookmarks, setBookmarks] = useState([]);
-
-    const onClick = (y, x) => {
-        setCenter(kakaoMap, y, x);
-        setMarker(kakaoMap, y, x);
-    };
-
-    const onClickBookmark = (e, item) => {
-        const bookmarkIndex = bookmarks.findIndex(
-            (bookmark) => bookmark.value === item.value
-        );
-
-        if (bookmarkIndex === -1) {
-            item.isbookmark = 'true';
-            setBookmarks([...bookmarks, item]);
-        } else {
-            item.isbookmark = 'false';
-            bookmarks.splice(bookmarkIndex, 1);
-            setBookmarks([...bookmarks]);
-        }
+    const onClick = (data) => {
+        setCenter(kakaoMap, data.y, data.x);
+        displaySearchMarker(kakaoMap, data);
     };
 
     return (
@@ -74,9 +64,7 @@ const SearchList = ({ type, data, onClickClose }) => {
                             <List.Item.Meta
                                 title={item.data.place_name}
                                 description={item.data.road_address_name}
-                                onClick={() =>
-                                    onClick(item.data.y, item.data.x)
-                                }
+                                onClick={() => onClick(item.data)}
                                 style={{ cursor: 'pointer' }}
                             />
                             {item.isbookmark === 'true' ? (

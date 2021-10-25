@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import SearchList from './SearchList';
 import { getLocalSearchKeyword } from '../../api/kakao';
-import { setCenter, setMarker } from '../../util/map/mapControl';
+import { setCenter } from '../../util/map/mapControl';
 import SearchBoxRadioButton from './SearchBoxRadioButton';
 import SearchBoxInput from './SearchBoxInput';
 import { Col, Row } from 'antd';
+import { displaySearchMarker } from '../../util/map/mapService';
 
 const StyledSearchBox = React.memo(styled.div`
     svg {
@@ -54,6 +55,7 @@ const SearchBox = () => {
     const [query, setQuery] = useState('');
     const [visible, setVisible] = useState(false);
     const [type, setType] = useState('result');
+    const [bookmarks, setBookmarks] = useState([]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -90,7 +92,7 @@ const SearchBox = () => {
             );
 
         setCenter(kakaoMap, data.y, data.x);
-        setMarker(kakaoMap, data.y, data.x);
+        displaySearchMarker(kakaoMap, data);
     };
 
     const onKeyDown = (e) => {
@@ -117,6 +119,21 @@ const SearchBox = () => {
     const onClickRadioButton = (e) => {
         setType(e.target.value);
         setVisible(true);
+    };
+
+    const onClickBookmark = (e, item) => {
+        const bookmarkIndex = bookmarks.findIndex(
+            (bookmark) => bookmark.value === item.value
+        );
+
+        if (bookmarkIndex === -1) {
+            item.isbookmark = 'true';
+            setBookmarks([...bookmarks, item]);
+        } else {
+            item.isbookmark = 'false';
+            bookmarks.splice(bookmarkIndex, 1);
+            setBookmarks([...bookmarks]);
+        }
     };
 
     return (
@@ -157,7 +174,9 @@ const SearchBox = () => {
                         <SearchList
                             type={type}
                             data={data}
+                            bookmarks={bookmarks}
                             onClickClose={onClose}
+                            onClickBookmark={onClickBookmark}
                         />
                     )}
                 </Col>
