@@ -1,6 +1,9 @@
 /*global kakao*/
 
-// 지도 기본 컨트롤
+/**************************
+ * 지도 기본 컨트롤
+ * 타입 변경 및 이동 관련
+ ***************************/
 
 // 지도타입 변경 (로드맵, 하이브리드)
 export const setMapType = (map, maptype) => {
@@ -28,29 +31,6 @@ export const getCurrentPosition = (option = { enableHighAccuracy: true }) => {
 export const setCenter = (map, y, x) => {
     const moveLatLng = new kakao.maps.LatLng(y, x);
     map.setCenter(moveLatLng);
-};
-
-// 마커 표시
-export let marker = null;
-export const setMarker = (map, y, x) => {
-    const latLng = new kakao.maps.LatLng(y, x);
-    if (!marker) {
-        // 마커 없으면 생성
-        marker = new kakao.maps.Marker({
-            position: latLng,
-        });
-        marker.setMap(map);
-    } else {
-        // 있으면 마커 위치 변경
-        marker.setPosition(latLng);
-    }
-};
-
-export const removeMarkers = () => {
-    const marker = new kakao.maps.Marker({
-        position: null,
-    });
-    marker.setMap(null);
 };
 
 export const setLevel = (map, level) => {
