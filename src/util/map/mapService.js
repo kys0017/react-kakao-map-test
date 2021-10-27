@@ -59,7 +59,7 @@ export const displayMarkerWithInfo = (map, place) => {
         overlay.setMap(map);
         overlay.setContent(makeOverlayContent(place));
         overlay.setPosition(marker.getPosition());
-        document.querySelector('.ant-popover').appendChild(closeBtn());
+        document.querySelector('.ant-popover-title').appendChild(closeBtn());
     });
 };
 
@@ -83,7 +83,7 @@ export const displaySearchMarker = (map, place) => {
         overlay.setMap(map);
         overlay.setContent(makeOverlayContent(place));
         overlay.setPosition(searchMarker.getPosition());
-        document.querySelector('.ant-popover').appendChild(closeBtn());
+        document.querySelector('.ant-popover-title').appendChild(closeBtn());
     });
 };
 
@@ -91,14 +91,14 @@ const closeBtn = () => {
     let closeEl = document.createElement('span');
     closeEl.className = 'close';
     closeEl.style.position = 'absolute';
-    closeEl.style.top = '5px';
-    closeEl.style.right = '-20px';
+    closeEl.style.top = '8px';
+    closeEl.style.right = '8px';
     closeEl.style.background = '#000';
     closeEl.style.color = '#fff';
     closeEl.style.textAlign = 'center';
-    closeEl.style.width = '20px';
-    closeEl.style.height = '20px';
-    closeEl.style.fontSize = 'smaller';
+    closeEl.style.width = '15px';
+    // closeEl.style.height = '20px';
+    closeEl.style.fontSize = 'x-small';
     closeEl.style.cursor = 'default';
     closeEl.textContent = 'X';
     closeEl.onclick = closeOverlay;
@@ -115,8 +115,10 @@ function makeOverlayContent(data) {
             <span class="ant-popover-arrow-content"></span>
           </div>
           <div class="ant-popover-inner" role="tooltip">
-            <div class="ant-popover-title" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-              <span title="${data.place_name}">${data.place_name}</span> 
+            <div class="ant-popover-title">
+              <span style="display: inline-block;width: 94%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="${data.place_name}">
+                ${data.place_name}
+              </span> 
             </div>
             <div class="ant-popover-inner-content" style="font-size: x-small">
               <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
