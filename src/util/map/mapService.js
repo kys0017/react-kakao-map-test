@@ -3,6 +3,7 @@
 /**************************
  * map 라이브러리
  **************************/
+import 'antd/dist/antd.css';
 
 /**
  * 카테고리 검색
@@ -41,7 +42,7 @@ let infowindow = new kakao.maps.InfoWindow({
     zIndex: 1,
     removable: true,
 });
-let overlay = new kakao.maps.CustomOverlay({});
+let overlay = new kakao.maps.CustomOverlay({ zIndex: 3, yAnchor: 1 });
 
 export const displayMarkerWithInfo = (map, place) => {
     // 마커를 생성하고 지도에 표시합니다
@@ -53,8 +54,12 @@ export const displayMarkerWithInfo = (map, place) => {
     markers.push(marker);
 
     addEvent(marker, 'click', () => {
-        infowindow.setContent(place.place_name);
-        infowindow.open(map, marker);
+        // infowindow.setContent(place.place_name);
+        // infowindow.open(map, marker);
+        overlay.setMap(map);
+        overlay.setContent(makeOverlayContent(place));
+        overlay.setPosition(marker.getPosition());
+        document.querySelector('.ant-popover').appendChild(closeBtn());
     });
 };
 
@@ -75,21 +80,58 @@ export const displaySearchMarker = (map, place) => {
     }
 
     addEvent(searchMarker, 'click', () => {
-        infowindow.setContent(place.place_name);
-        infowindow.open(map, searchMarker);
-        // overlay.setMap(map);
-        // overlay.setContent(makeOverlayContent(place));
-        // overlay.setPosition(searchMarker.getPosition());
+        overlay.setMap(map);
+        overlay.setContent(makeOverlayContent(place));
+        overlay.setPosition(searchMarker.getPosition());
+        document.querySelector('.ant-popover').appendChild(closeBtn());
     });
 };
 
-const makeOverlayContent = (data) => {
-    return `
-        <div class="wrap" style="position: absolute;bottom: 42px; width: 250px; left: -125px; padding: 0px;background-color: greenyellow; ">
-            ${data.place_name}
-        </div>
-    `;
+const closeBtn = () => {
+    let closeEl = document.createElement('span');
+    closeEl.className = 'close';
+    closeEl.style.position = 'absolute';
+    closeEl.style.top = '5px';
+    closeEl.style.right = '-20px';
+    closeEl.style.background = '#000';
+    closeEl.style.color = '#fff';
+    closeEl.style.textAlign = 'center';
+    closeEl.style.width = '20px';
+    closeEl.style.height = '20px';
+    closeEl.style.fontSize = 'smaller';
+    closeEl.style.cursor = 'default';
+    closeEl.textContent = 'X';
+    closeEl.onclick = closeOverlay;
+    closeEl.title = '닫기';
+
+    return closeEl;
 };
+
+function makeOverlayContent(data) {
+    return `
+      <div class="ant-popover ant-popover-placement-top" style="position: relative; top: -35px; max-width: 270px;" >
+        <div class="ant-popover-content">
+          <div class="ant-popover-arrow">
+            <span class="ant-popover-arrow-content"></span>
+          </div>
+          <div class="ant-popover-inner" role="tooltip">
+            <div class="ant-popover-title" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+              <span title="${data.place_name}">${data.place_name}</span> 
+            </div>
+            <div class="ant-popover-inner-content" style="font-size: x-small">
+              <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                <span title="${data.address_name}">${data.address_name}</span> <br />
+                <span title="${data.road_address_name}">${data.road_address_name}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+}
+
+// // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
+const closeOverlay = () => overlay.setMap(null);
 
 // 마커를 생성하고 지도에 표시합니다
 export const setMarker = (map, place) =>
