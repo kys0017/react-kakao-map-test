@@ -58,13 +58,13 @@ function SearchBoxInput({
     <Card
       size="small"
       title="REACT-KAKAO-MAP-TEST"
-      //   hoverable
       bordered={false}
       headStyle={{
         backgroundColor: "rgb(64 169 255)",
         color: "#fff",
         borderRadius: "5px 5px 0 0",
       }}
+      style={{ borderRadius: "5px 5px 0 0" }}
       //   bodyStyle={{
       //     backgroundColor: '#40a9ff',
       //     color: "#fff",
