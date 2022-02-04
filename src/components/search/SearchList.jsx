@@ -17,8 +17,13 @@ const SearchListDiv = React.memo(styled.div`
   margin-top: 3px;
   border-radius: 5px;
 
+  & .ant-card-head-wrapper {
+    height: 38px;
+  }
+
   & .ant-card-extra {
     padding: 0;
+    display: flex;
   }
 `);
 
@@ -38,6 +43,8 @@ const SearchList = ({
     map: state.mapSetting.map,
   }));
 
+  //   console.log(data);
+
   const onClick = (data) => {
     setCenter(kakaoMap, data.y, data.x);
     displaySearchMarker(kakaoMap, data);
@@ -48,8 +55,11 @@ const SearchList = ({
       <Card
         type="inner"
         size="small"
-        title={type === "result" ? "검색결과" : "북마크"}
-        headStyle={{ height: "38px" }}
+        title={
+          type === "result"
+            ? ` ${data.length || 0} 개의 검색결과`
+            : `${bookmarks.length || 0} 개의 북마크  `
+        }
         bodyStyle={{ display: "none" }}
         extra={
           <AiFillCloseSquare
