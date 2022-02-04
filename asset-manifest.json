@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/react-kakao-map-test/static/css/main.2ae47eeb.chunk.css",
-    "main.js": "/react-kakao-map-test/static/js/main.d17c9ba7.chunk.js",
-    "main.js.map": "/react-kakao-map-test/static/js/main.d17c9ba7.chunk.js.map",
+    "main.js": "/react-kakao-map-test/static/js/main.deabd46e.chunk.js",
+    "main.js.map": "/react-kakao-map-test/static/js/main.deabd46e.chunk.js.map",
     "runtime-main.js": "/react-kakao-map-test/static/js/runtime-main.5c6408d2.js",
     "runtime-main.js.map": "/react-kakao-map-test/static/js/runtime-main.5c6408d2.js.map",
     "static/css/2.46925b27.chunk.css": "/react-kakao-map-test/static/css/2.46925b27.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.46925b27.chunk.css",
     "static/js/2.32bae70e.chunk.js",
     "static/css/main.2ae47eeb.chunk.css",
-    "static/js/main.d17c9ba7.chunk.js"
+    "static/js/main.deabd46e.chunk.js"
   ]
 }
