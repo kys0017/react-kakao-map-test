@@ -1,4 +1,4 @@
-/*global kakao*/
+// /*global kakao*/
 import React from "react";
 import { Card, List } from "antd";
 import styled from "styled-components";
