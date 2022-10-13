@@ -4,7 +4,7 @@
 
 <!-- :rocket: [GitHub Pages](https://kys0017.github.io/react-kakao-map-test/)    -->
 
-:rocket: [View page](https://kys-react-kakao-map.web.app/)   
+:rocket: [View page](http://kys-react-kakao-map.netlify.app/)   
 React practice using kakao api
 
 - frontend : react
